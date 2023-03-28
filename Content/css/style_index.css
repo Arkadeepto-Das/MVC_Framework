@@ -30,6 +30,12 @@ div.container form span {
   color: #d800ff;
 }
 
+div.container form span.error{
+  font-family: sans-serif;
+  font-size: 15px;
+  color: red;
+}
+
 div.container form {
   margin-top: 20px;
 }
@@ -46,13 +52,21 @@ div.container form input {
   background-color: transparent;
   padding-top: 10px;
   margin-bottom: 23px;
-  width: 17rem;
+  width: 23rem;
   font-size: 15px;
   outline: none;
 }
 
-div.container form input[type="email"]:focus-within, input[type="password"]:focus-within {
+div.container form input[type="email"]:focus-within {
   background: transparent;
+}
+
+div.container form input[type="password"]:focus-within  {
+  background: transparent;
+}
+
+div.container form input[type="file"] {
+  border: none;
 }
 
 div.container form input[type=submit] {
