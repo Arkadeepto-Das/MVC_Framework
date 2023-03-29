@@ -1,8 +1,10 @@
+<!-- Controller part of the posts page -->
+
 <?php
 
   session_start();
 
-  if($_SESSION["login"] === TRUE) {
+  if(isset($_SESSION["login"]) && $_SESSION["login"] === TRUE) {
     require 'Model/posts.php';
   }
 
