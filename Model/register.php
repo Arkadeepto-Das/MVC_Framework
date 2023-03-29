@@ -43,7 +43,7 @@
 
         else {
 
-          if(isset($_POST["image"])) {
+          if(isset($_FILES["image"]["name"])) {
 
             //Image validation.
             $imageCheck = $validate->imageValidation($_FILES["image"]["name"],
@@ -51,7 +51,7 @@
 
             if($imageCheck === FALSE) {
 
-              $GLOBALS["imageErr"] = "File should be max 8mb and type should be jpg,
+              $GLOBALS["imageErr"] = "Image should be max 8mb and type should be jpg,
               png and jpeg only.";
 
               require 'View/register_page.php';

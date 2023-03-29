@@ -267,7 +267,8 @@
     public function addPosts($email, string $postText = NULL, string $postImage = NULL) {
 
       $conn = self::connect();
-      $data = "INSERT INTO Posts (Email, Post_text)
+
+      $data = "INSERT INTO Posts (Email, Post_text, Post_image)
       VALUES ('$email', '$postText', '$postImage')";
       
       if($conn->query($data) === FALSE) {

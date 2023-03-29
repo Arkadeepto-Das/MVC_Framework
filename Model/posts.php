@@ -1,39 +1,83 @@
+<!-- Model part of the posts page. -->
+
 <?php
 
-  if($_SERVER["REQUEST_METHOD"] == "POST") {
+  if(isset($_POST) && $_POST != Array()) {
 
-    if(isset($_POST)) {
+    require 'Model/SendQuery.php';
+    $query = new SendQuery();
 
-      $postText = $_POST["text"];
+    $postText = $_POST["text"];
+    $postText = htmlspecialchars($postText, ENT_QUOTES);
 
-      require 'Model/SendQuery.php';
-      $query = new SendQuery();
+    if(isset($postText)) {
+      
+      if($_FILES["image"]["name"] === NULL) {
 
-      if(isset($postText)) {
-        
-        if(isset($postImage)) {
-          $query->addPosts($GLOBALS["email"], $postText, $postImage);
+        require 'Classes/Validation.php';
+        $validate = new Validation();
+
+        $imageResult = $validate->imageValidation($_FILES["image"]["name"],
+        $_FILES["image"]["size"], $_FILES["image"]["tmp_name"]);
+
+        if($imageResult === FALSE) {
+          
+          $_SESSION["imageErr"] = "Image should be max 8mb and type should be jpg,
+          png and jpeg only.";
+          require 'View/posts_page.php';
+
         }
-  
+
         else {
-          $query->addPosts($GLOBALS["email"], $postText);
+        
+          $query->addPosts($_SESSION["email"], $postText, $imageResult);
+          unset($_POST);
+          header("Location: /posts");
+        
         }
-  
+
       }
-  
+
       else {
-  
-        if(isset($postImage)) {
-          $query->addPosts($GLOBALS["email"], NULL, $postImage);
-        }
-  
+        $query->addPosts($_SESSION["email"], $postText);
+        unset($_POST);
+        header("Location: /posts");
       }
-  
+
+    }
+
+    else {
+
+      if(isset($_FILES["image"]["name"])) {
+        $query->addPosts($_SESSION["email"], NULL, $imageResult);
+        unset($_POST);
+        header("Location: /posts");
+      }
+
     }
 
   }
 
-  $_SESSION["postsData"] = $query->fetchPosts();
-  require 'View/posts_page.php';
+  else {
+    
+    if(!isset($_SESSION)) {
+      session_start();
+    }
+
+    if(isset($_SESSION["login"]) && $_SESSION["login"] === TRUE) {
+
+      require 'Model/SendQuery.php';
+      $query = new SendQuery();
+
+      $_SESSION["postsData"] = $query->fetchPosts();
+      require 'View/posts_page.php';
+
+    }
+
+    else {
+      require 'Controller/login.php';
+    }  
+
+  }
 
 ?>

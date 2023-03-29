@@ -2,6 +2,8 @@
 
 <?php
 
+  session_start();
+
   require 'Model/SendQuery.php';
 
   $email = $_POST["email"];
@@ -15,9 +17,12 @@
     $passwordData = $query->select(NULL, $email, $password);
 
     if(isset($passwordData) && $passwordData->fetch_assoc()["Password"] == $password) {
-      $GLOBALS["email"] = $email;
+
+      $_SESSION["email"] = $email;
       unset($_POST);
-      require 'Model/posts.php';
+      $_SESSION["login"] = TRUE;
+      header("Location: /posts");
+          
     }
     
     else {
