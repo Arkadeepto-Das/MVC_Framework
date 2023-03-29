@@ -39,7 +39,7 @@
 
     public function imageValidation($imageName, $imageSize, $imageTmpName) {
 
-      $target_dir = "Content/Images/Posts/";
+      $target_dir = "Content/Images/";
       $target_file = $target_dir . basename($imageName);
       $imageType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
 
@@ -48,7 +48,7 @@
 
         $check = getimagesize($imageTmpName);
 
-        if($check !== FALSE) {
+        if($check === FALSE) {
           return FALSE;
         }
         
