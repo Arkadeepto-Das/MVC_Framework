@@ -1,7 +1,6 @@
 <!-- HTML part of the posts page -->
 
 <?php
-  session_start();
   $_SESSION["login"] = TRUE;
 ?>
 
@@ -31,11 +30,23 @@
     </div>
   </div>
   <div class="send_post">
-    <form action="/posts" method="POST" enctype="multipart/form-data">
-    <textarea name="text" id="text" placeholder="What's cooking, good looking?"
-    cols="63" rows="4"></textarea>
-    <input type="submit" value="Post">
-    </form>
+    <div class="container">
+      <form action="/posts" method="POST" enctype="multipart/form-data">
+      <textarea name="text" id="text" placeholder="What's cooking, good looking?"
+      cols="63" rows="4"></textarea>
+      <label for="image" class="upload">Photo</label>
+      <input type="file" name="image" id="image" style="display: none;">
+      <input type="submit" name="submit" value="Post">
+      </form>
+    </div>
+    <span class="error">
+      <?php
+        if(isset($_SESSION["imageErr"])) {
+          echo $_SESSION["imageErr"];
+          unset($_SESSION["imageErr"]);
+        }
+      ?>
+    </span>
   </div>
   <div class="post_body">
     <?php
@@ -45,16 +56,16 @@
         while($row = $_SESSION["postsData"]->fetch_assoc()) {
 
     ?>
-    <div class="post_container">
+    <div class="container">
       <div class="posts">
         <div class="user">
-          <h6>
+          <h4>
             <?php
               if(isset($row["Username"])) {
                 echo $row["Username"];
               }
             ?>
-          </h6>
+          </h4>
           <p class="date">
             <?php
               if(isset($row["Post_date"])) {
@@ -66,10 +77,17 @@
         <p class="text">
           <?php
             if(isset($row["Post_text"])) {
-              echo $row["Post_text"];
+              echo nl2br($row["Post_text"]);
             }
           ?>
         </p>
+        <?php
+          if(isset($row["Post_image"])) {
+        ?>
+        <img src="<?php echo $row["Post_image"]; ?>">
+        <?php
+          }
+        ?>
       </div>
     </div>
     <?php
@@ -83,7 +101,7 @@
       else {
       
     ?>
-    <div class="post_container">
+    <div class="container">
       <h1>NO POSTS</h1>
     </div>
     <?php
